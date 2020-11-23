@@ -1,0 +1,26 @@
+{
+  "name": "booking_app",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/misiekhardcore/booking_app.git"
+  },
+  "author": "misiekhardcore <misiekhardcore@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "description": "GraphQL API from this [video](https://www.youtube.com/watch?v=7giZGFDGnkc&list=PL55RiY5tL51rG1x02Yyj93iypUuHYXcB_)",
+  "bugs": {
+    "url": "https://github.com/misiekhardcore/booking_app/issues"
+  },
+  "homepage": "https://github.com/misiekhardcore/booking_app#readme",
+  "scripts": {
+    "start": "nodemon app.js"
+  }
+}
