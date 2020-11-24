@@ -1,9 +1,13 @@
 const Event = require("../../modules/event");
 const Booking = require("../../modules/booking");
 const { transformBooking, transformEvent } = require("./merge");
+const isAuth = require("../../middlewares/isAuth");
 
 module.exports = {
-  bookings: async () => {
+  bookings: async (args, { isAuth }) => {
+    if (!isAuth) {
+      throw new Error("You are not authenticated");
+    }
     try {
       const bookings = await Booking.find();
       return bookings.map((booking) => {
@@ -13,11 +17,14 @@ module.exports = {
       throw err;
     }
   },
-  bookEvent: async ({ eventId }) => {
+  bookEvent: async ({ eventId }, { isAuth, userId }) => {
+    if (!isAuth) {
+      throw new Error("You are not authenticated");
+    }
     try {
       const event = await Event.findOne({ _id: eventId });
       const booking = new Booking({
-        user: "5fbd03a34707393c14051246",
+        user: userId,
         event,
       });
       const result = await booking.save();
@@ -26,7 +33,10 @@ module.exports = {
       throw err;
     }
   },
-  cancelBooking: async ({ bookingId }) => {
+  cancelBooking: async ({ bookingId }, { isAuth }) => {
+    if (!isAuth) {
+      throw new Error("You are not authenticated");
+    }
     try {
       const booking = await Booking.findById(bookingId).populate("event");
       const event = transformEvent(booking.event);
