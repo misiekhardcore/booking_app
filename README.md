@@ -13,3 +13,4 @@
 
 1. in `/frontend` use `yarn create react-app .`
 1. install `node-sass@4.14.1`
+1. install `react-router-dom`
