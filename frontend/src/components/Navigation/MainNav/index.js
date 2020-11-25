@@ -1,28 +1,30 @@
 import React from "react";
+import { Nav, Navbar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import "./styles.scss";
 
 const MainNav = (props) => {
   return (
     <header className="main-nav">
-      <div className="main-nav__logo">
+      <Navbar bg="primary" variant="dark" expand="lg">
         <NavLink to="/">
-          <h1>EasyEvent</h1>
+          <Navbar.Brand>EasyEvent</Navbar.Brand>
         </NavLink>
-      </div>
-      <nav className="main-nav__items">
-        <ul>
-          <li className="main-nav__item">
-            <NavLink to="/auth">Auth</NavLink>
-          </li>
-          <li className="main-nav__item">
-            <NavLink to="/events">Events</NavLink>
-          </li>
-          <li className="main-nav__item">
-            <NavLink to="/bookings">Bookings</NavLink>
-          </li>
-        </ul>
-      </nav>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ml-auto">
+            <NavLink className="nav-link" to="/auth">
+              Auth
+            </NavLink>
+            <NavLink className="nav-link" to="/events">
+              Events
+            </NavLink>
+            <NavLink className="nav-link" to="/bookings">
+              Bookings
+            </NavLink>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     </header>
   );
 };
