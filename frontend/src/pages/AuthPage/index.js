@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import AuthContext from "../../context/auth-context";
 
 class AuthPage extends Component {
   state = {
     isLogin: true,
   };
+
+  static contextType = AuthContext;
+
   constructor(props) {
     super(props);
     this.email = React.createRef();
@@ -62,8 +66,14 @@ class AuthPage extends Component {
         }
         return res.json();
       })
-      .then((res2) => {
-        console.log(res2);
+      .then((res) => {
+        if (res.data.login.token) {
+          this.context.login(
+            res.data.login.token,
+            res.data.login.userId,
+            res.data.login.tokenExpiration
+          );
+        }
       })
       .catch((err) => {
         console.log(err);
