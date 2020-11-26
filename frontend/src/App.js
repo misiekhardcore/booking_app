@@ -36,12 +36,10 @@ class App extends Component {
           <MainNav />
           <main>
             <Switch>
-              {!this.context.token && <Redirect exact from="/" to="/auth" />}
-              {this.context.token && <Redirect exact from="/" to="/events" />}
-              {this.context.token && (
-                <Redirect exact from="/auth" to="/events" />
-              )}
-              {!this.context.token && (
+              {!this.state.token && <Redirect exact from="/" to="/auth" />}
+              {this.state.token && <Redirect exact from="/" to="/events" />}
+              {this.state.token && <Redirect exact from="/auth" to="/events" />}
+              {!this.state.token && (
                 <Redirect exact from="/bookings" to="/auth" />
               )}
               <Route path="/auth" component={AuthPage} />

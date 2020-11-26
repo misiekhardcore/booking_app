@@ -27,9 +27,14 @@ const MainNav = (props) => {
                     Events
                   </NavLink>
                   {context.token && (
-                    <NavLink className="nav-link" to="/bookings">
-                      Bookings
-                    </NavLink>
+                    <>
+                      <NavLink className="nav-link" to="/bookings">
+                        Bookings
+                      </NavLink>
+                      <button className="nav-link" onClick={context.logout}>
+                        Log Out
+                      </button>
+                    </>
                   )}
                 </Nav>
               </Navbar.Collapse>
