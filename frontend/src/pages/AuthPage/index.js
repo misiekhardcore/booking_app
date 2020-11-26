@@ -26,9 +26,10 @@ class AuthPage extends Component {
     const email = this.email.current.value;
     const password = this.password.current.value;
 
-    // if (email.trim().length === 0 || password.trim().length) {
-    //   return;
-    // }
+    if (email.trim().length === 0 || password.trim().length === 0) {
+      return;
+    }
+
     let query;
     if (this.state.isLogin) {
       query = {

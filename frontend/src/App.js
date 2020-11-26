@@ -10,16 +10,20 @@ import AuthContext from "./context/auth-context";
 
 class App extends Component {
   state = {
-    token: null,
-    userId: null,
+    token: localStorage.getItem("token") || null,
+    userId: localStorage.getItem("userId") || null,
   };
 
   login = (token, userId, tokenExpiration) => {
     this.setState({ token, userId });
+    localStorage.setItem("token", token);
+    localStorage.setItem("userId", userId);
   };
 
   logout = () => {
     this.setState({ token: null, userId: null });
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
   };
 
   render() {
