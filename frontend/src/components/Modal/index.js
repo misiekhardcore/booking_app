@@ -17,7 +17,7 @@ const ModalWindow = (props) => {
           )}
           {props.save && (
             <Button variant="primary" onClick={props.save}>
-              Save
+              {props.label ? props.label : "Save"}
             </Button>
           )}
         </Modal.Footer>

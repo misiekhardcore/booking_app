@@ -12,6 +12,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  min-height: 100vh;
 }
 
 //Topology
@@ -28,4 +29,8 @@ h4 {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.text-shadow{
+  text-shadow: 1px 1px 3px black;
 }

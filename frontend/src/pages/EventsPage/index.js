@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import ModalWindow from "../../components/Modal";
 import AuthContext from "../../context/auth-context";
+import EventList from "../../components/Event/EventList";
+import Loading from "../../components/Loading";
 
 class EventsPage extends Component {
   state = {
     show: false,
     events: [],
+    loading: false,
+    selectedEvent: null,
+    showDetails: false,
   };
 
   componentDidMount() {
@@ -46,6 +51,7 @@ class EventsPage extends Component {
     ) {
       return;
     }
+
     const query = {
       query: `
       mutation{
@@ -55,9 +61,6 @@ class EventsPage extends Component {
           description
           price
           date
-          creator{
-            email
-          }
         }
       }
       `,
@@ -79,8 +82,13 @@ class EventsPage extends Component {
       })
       .then((res) => {
         if (res.data) {
-          this.setState({
-            events: [...this.state.events, res.data.createEvent],
+          this.setState((prevState) => {
+            const newEvents = [...prevState.events];
+            newEvents.push({
+              ...res.data.createEvent,
+              creator: { _id: this.context.userId },
+            });
+            return { events: newEvents };
           });
         }
       })
@@ -95,6 +103,7 @@ class EventsPage extends Component {
   };
 
   fetchEvents = () => {
+    this.setState({ loading: true });
     const query = {
       query: `
       query{
@@ -105,6 +114,7 @@ class EventsPage extends Component {
           price
           date
           creator{
+            _id
             email
           }
         }
@@ -127,49 +137,48 @@ class EventsPage extends Component {
       })
       .then((res) => {
         if (res.data) {
-          this.setState({ events: res.data.events });
+          this.setState({ events: res.data.events, loading: false });
         }
       })
       .catch((err) => {
+        this.setState({ loading: false });
         console.log(err);
       });
   };
 
+  handleShowDetails = (eventId) => {
+    this.setState((prevState) => {
+      const selectedEvent = prevState.events.find((e) => e._id === eventId);
+      return { selectedEvent: selectedEvent, showDetails: true };
+    });
+  };
+
   render() {
-    const eventsList = this.state.events.map((event) => (
-      <Row key={event._id}>
-        <Col className="m-2 shadow rounded">
-          <h2>{event.title}</h2>
-          <span className="badge badge-primary">
-            {new Date(event.date).toLocaleString("pl-PL", {
-              timeZone: "UTC",
-              weekday: "short",
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </span>
-          <p className="text-muted p-2">{event.description}</p>
-        </Col>
-      </Row>
-    ));
     return (
       <>
         <Container className="mt-4">
           {this.context.token && (
-            <Row className="justify-content-center">
-              <Col md="4" className="text-center shadow px-5 py-4 m-2 rounded">
+            <Row className="justify-content-center mb-4">
+              <Col className="d-flex justify-content-center bg-light shadow p-4 rounded">
                 <h2>Share your own event</h2>
-                <Button onClick={this.handleOpen} className="shadow-sm">
+                <Button onClick={this.handleOpen} className="shadow-sm ml-4">
                   Create Event
                 </Button>
               </Col>
             </Row>
           )}
-          <section className="events__list">
-            {this.state.events.length !== 0 && eventsList}
+          <section>
+            {this.state.loading ? (
+              <Loading />
+            ) : (
+              this.state.events.length !== 0 && (
+                <EventList
+                  events={this.state.events}
+                  userId={this.context.userId}
+                  handleOnClick={this.handleShowDetails}
+                />
+              )
+            )}
           </section>
         </Container>
 
@@ -238,6 +247,20 @@ class EventsPage extends Component {
             </Form.Group>
           </Form>
         </ModalWindow>
+
+        {this.state.showDetails && (
+          <ModalWindow
+            title={this.state.selectedEvent.title}
+            show={this.state.showDetails}
+            close={() =>
+              this.setState({ showDetails: false, selectedEvent: null })
+            }
+            save={this.handleSave}
+            label={"Book Now!"}
+          >
+            <p>{this.state.selectedEvent.description}</p>
+          </ModalWindow>
+        )}
       </>
     );
   }
