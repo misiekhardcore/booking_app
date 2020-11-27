@@ -28,7 +28,7 @@ class EventItem extends Component {
           // }}
         >
           <Row className="text-dark">
-            <Col md={10}>
+            <Col>
               <button className="link text-dark d-block">
                 <h2 className="text-shadoww">{this.props.title}</h2>
               </button>
@@ -46,10 +46,12 @@ class EventItem extends Component {
               <p className="p-2 text-shadoww">{this.props.description}</p>
             </Col>
             <Col
-              md={2}
+              md="auto"
               className="d-flex flex-column justify-content-center align-items-center"
             >
-              <p className="h3 text-shadoww">{this.props.price} zł</p>
+              <p className="h3 text-shadoww">
+                {this.props.price.toFixed(2)} zł
+              </p>
               <Button
                 onClick={this.props.handleOnClick.bind(this, this.props._id)}
                 disabled={this.isYour}

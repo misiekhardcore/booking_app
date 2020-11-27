@@ -102,6 +102,52 @@ class EventsPage extends Component {
     this.handleSave();
   };
 
+  handleBook = () => {
+    if (!this.context.token) {
+      this.setState({ selectedEvent: null });
+      this.props.history.push("/auth");
+    }
+    const query = {
+      query: `
+      mutation{
+        bookEvent(eventId:"${this.state.selectedEvent._id}"){
+          _id
+          event{
+            _id
+          }
+          user{
+            _id
+          }
+        }
+      }
+      `,
+    };
+
+    fetch("http://localhost:4000/graphql", {
+      method: "POST",
+      body: JSON.stringify(query),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.context.token,
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Failed");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        if (res.data) {
+          console.log(res.data);
+          this.setState({ selectedEvent: null, showDetails: null });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   fetchEvents = () => {
     this.setState({ loading: true });
     const query = {
@@ -183,6 +229,7 @@ class EventsPage extends Component {
         </Container>
 
         <ModalWindow
+          size="lg"
           title="Create Event"
           show={this.state.show}
           close={this.handleClose}
@@ -250,15 +297,39 @@ class EventsPage extends Component {
 
         {this.state.showDetails && (
           <ModalWindow
+            size="lg"
             title={this.state.selectedEvent.title}
             show={this.state.showDetails}
             close={() =>
               this.setState({ showDetails: false, selectedEvent: null })
             }
-            save={this.handleSave}
-            label={"Book Now!"}
+            save={this.handleBook}
+            label={this.context.token ? "Book Now!" : "Log in to book"}
           >
-            <p>{this.state.selectedEvent.description}</p>
+            <Row>
+              <Col>
+                <span class="badge badge-secondary p-2 mr-auto">
+                  {new Date(this.state.selectedEvent.date).toLocaleString(
+                    "pl-PL",
+                    {
+                      timeZone: "UTC",
+                      weekday: "short",
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    }
+                  )}
+                </span>
+                <p>{this.state.selectedEvent.description}</p>
+              </Col>
+              <Col md="auto">
+                <p className="h2">
+                  {this.state.selectedEvent.price.toFixed(2)} zł
+                </p>
+              </Col>
+            </Row>
           </ModalWindow>
         )}
       </>

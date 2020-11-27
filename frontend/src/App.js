@@ -24,6 +24,7 @@ class App extends Component {
     this.setState({ token: null, userId: null });
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    window.location.reload();
   };
 
   render() {
@@ -37,24 +38,20 @@ class App extends Component {
             logout: this.logout,
           }}
         >
-          <div className="bg-light">
-            <MainNav />
-            <main>
-              <Switch>
-                {!this.state.token && <Redirect exact from="/" to="/auth" />}
-                {this.state.token && <Redirect exact from="/" to="/events" />}
-                {this.state.token && (
-                  <Redirect exact from="/auth" to="/events" />
-                )}
-                {!this.state.token && (
-                  <Redirect exact from="/bookings" to="/auth" />
-                )}
-                <Route path="/auth" component={AuthPage} />
-                <Route path="/events" component={EventsPage} />
-                <Route path="/bookings" component={BookingPage} />
-              </Switch>
-            </main>
-          </div>
+          <MainNav />
+          <main>
+            <Switch>
+              {!this.state.token && <Redirect exact from="/" to="/auth" />}
+              {this.state.token && <Redirect exact from="/" to="/events" />}
+              {this.state.token && <Redirect exact from="/auth" to="/events" />}
+              {!this.state.token && (
+                <Redirect exact from="/bookings" to="/auth" />
+              )}
+              <Route path="/auth" component={AuthPage} />
+              <Route path="/events" component={EventsPage} />
+              <Route path="/bookings" component={BookingPage} />
+            </Switch>
+          </main>
         </AuthContext.Provider>
       </BrowserRouter>
     );

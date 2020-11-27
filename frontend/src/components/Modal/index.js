@@ -4,8 +4,8 @@ import { Modal, Button } from "react-bootstrap";
 const ModalWindow = (props) => {
   return (
     <div>
-      <Modal show={props.show} onHide={props.close}>
-        <Modal.Header className="bg-primary text-light" closeButton>
+      <Modal size={props.size} show={props.show} onHide={props.close}>
+        <Modal.Header className="bg-warning" closeButton>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{props.children}</Modal.Body>
@@ -16,7 +16,7 @@ const ModalWindow = (props) => {
             </Button>
           )}
           {props.save && (
-            <Button variant="primary" onClick={props.save}>
+            <Button variant="warning" onClick={props.save}>
               {props.label ? props.label : "Save"}
             </Button>
           )}
