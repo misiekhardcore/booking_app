@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../../modules/user");
+const User = require("../../models/user");
 
 module.exports = {
   createUser: async ({ userInput: { email, password } }) => {
@@ -15,7 +15,7 @@ module.exports = {
         password: hashed,
       });
       const result = await user_1.save();
-      return { ...result._doc, password: null };
+      return { ...result._doc, password: null, _id: result.id };
     } catch (err) {
       throw err;
     }
@@ -23,11 +23,11 @@ module.exports = {
   login: async ({ email, password }) => {
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error("Invalid login and/or password1");
+      throw new Error("Invalid login and/or password");
     }
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      throw new Error("Invalid login and/or password2");
+      throw new Error("Invalid login and/or password");
     }
     const token = jwt.sign(
       { userId: user.id, email: user.email },
@@ -37,7 +37,7 @@ module.exports = {
       }
     );
     return {
-      userId: (await user).id,
+      userId: user.id,
       token,
       tokenExpiration: 1,
     };

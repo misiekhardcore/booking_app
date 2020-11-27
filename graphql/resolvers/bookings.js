@@ -1,5 +1,5 @@
-const Event = require("../../modules/event");
-const Booking = require("../../modules/booking");
+const Event = require("../../models/event");
+const Booking = require("../../models/booking");
 const { transformBooking, transformEvent } = require("./merge");
 const isAuth = require("../../middlewares/isAuth");
 

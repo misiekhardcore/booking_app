@@ -1,5 +1,5 @@
-const Event = require("../../modules/event");
-const User = require("../../modules/user");
+const Event = require("../../models/event");
+const User = require("../../models/user");
 const { transformEvent } = require("./merge");
 
 module.exports = {
@@ -17,7 +17,6 @@ module.exports = {
     { eventInput: { title, description, price, date } },
     { isAuth, userId }
   ) => {
-    console;
     if (!isAuth) {
       throw new Error("You are not authenticated");
     }

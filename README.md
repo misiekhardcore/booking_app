@@ -1,4 +1,4 @@
-# GraphQL API from this [video](https://www.youtube.com/watch?v=7smx9VgiGIo&list=PL55RiY5tL51rG1x02Yyj93iypUuHYXcB_&index=18)
+# GraphQL API from this [video](https://www.youtube.com/watch?v=EBCdokSCU7g&list=PL55RiY5tL51rG1x02Yyj93iypUuHYXcB_&index=22)
 
 ## backend
 
