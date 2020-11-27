@@ -139,7 +139,6 @@ class EventsPage extends Component {
       })
       .then((res) => {
         if (res.data) {
-          console.log(res.data);
           this.setState({ selectedEvent: null, showDetails: null });
         }
       })
@@ -308,7 +307,7 @@ class EventsPage extends Component {
           >
             <Row>
               <Col>
-                <span class="badge badge-secondary p-2 mr-auto">
+                <span className="badge badge-secondary p-2 mr-auto">
                   {new Date(this.state.selectedEvent.date).toLocaleString(
                     "pl-PL",
                     {

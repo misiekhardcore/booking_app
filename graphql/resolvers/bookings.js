@@ -4,12 +4,12 @@ const { transformBooking, transformEvent } = require("./merge");
 const isAuth = require("../../middlewares/isAuth");
 
 module.exports = {
-  bookings: async (args, { isAuth }) => {
+  bookings: async (args, { isAuth, userId }) => {
     if (!isAuth) {
       throw new Error("You are not authenticated");
     }
     try {
-      const bookings = await Booking.find();
+      const bookings = await Booking.find({ user: userId });
       return bookings.map((booking) => {
         return transformBooking(booking);
       });

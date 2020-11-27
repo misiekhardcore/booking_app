@@ -2,16 +2,15 @@ import React, { Component } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 
 class EventItem extends Component {
-  constructor(props) {
-    super(props);
-    this.isYour = props.creator._id && props.creator._id === props.userId;
-  }
-  state = {
-    angle: Math.random() * 360,
-    red: Math.random() * 50 + 30,
-    green: Math.random() * 50 + 30,
-    blue: Math.random() * 50 + 30,
-  };
+  isYour =
+    this.props.creator._id && this.props.creator._id === this.props.userId;
+
+  // state = {
+  //   angle: Math.random() * 360,
+  //   red: Math.random() * 50 + 30,
+  //   green: Math.random() * 50 + 30,
+  //   blue: Math.random() * 50 + 30,
+  // };
 
   render() {
     return (
@@ -29,9 +28,7 @@ class EventItem extends Component {
         >
           <Row className="text-dark">
             <Col>
-              <button className="link text-dark d-block">
-                <h2 className="text-shadoww">{this.props.title}</h2>
-              </button>
+              <h2 className="text-shadoww">{this.props.title}</h2>
               <span className="badge badge-warning p-2 mr-auto">
                 {new Date(this.props.date).toLocaleString("pl-PL", {
                   timeZone: "UTC",
@@ -47,13 +44,13 @@ class EventItem extends Component {
             </Col>
             <Col
               md="auto"
-              className="d-flex flex-column justify-content-center align-items-center"
+              className="d-flex flex-column justify-content-center align-items-end"
             >
               <p className="h3 text-shadoww">
                 {this.props.price.toFixed(2)} zł
               </p>
               <Button
-                onClick={this.props.handleOnClick.bind(this, this.props._id)}
+                onClick={() => this.props.handleOnClick(this.props._id)}
                 disabled={this.isYour}
                 variant={this.isYour ? "secondary" : "warning"}
               >

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Container, Row } from "react-bootstrap";
+import { Prev } from "react-bootstrap/esm/PageItem";
+import BookingList from "../../components/Booking/BookingList";
 import Loading from "../../components/Loading";
 import AuthContext from "../../context/auth-context";
 
@@ -20,6 +22,46 @@ class BookingPage extends Component {
   componentWillUnmount() {
     this.isActive = false;
   }
+
+  handleCancel = (bookingId) => {
+    const query = {
+      query: `
+      mutation{
+        cancelBooking(bookingId:"${bookingId}"){
+          _id
+        }
+      }
+      `,
+    };
+
+    fetch("http://localhost:4000/graphql", {
+      method: "POST",
+      body: JSON.stringify(query),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.context.token,
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error("Failed");
+        }
+        return res.json();
+      })
+      .then((res) => {
+        if (res.data && this.isActive) {
+          this.setState((prevState) => {
+            const newBookings = prevState.bookings.filter((b) => {
+              return b._id !== bookingId;
+            });
+            return { bookings: newBookings };
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   fetchBookings = () => {
     this.setState({ loading: true });
@@ -67,20 +109,19 @@ class BookingPage extends Component {
 
   render() {
     return (
-      <Container>
-        <Row>
+      <Container className="mt-4">
+        <section>
           {this.state.loading ? (
             <Loading />
           ) : (
-            <ul>
-              {this.state.bookings.map((booking) => (
-                <li key={booking._id}>
-                  {booking.event.title} - {booking.user.email}
-                </li>
-              ))}
-            </ul>
+            this.state.bookings.length !== 0 && (
+              <BookingList
+                bookings={this.state.bookings}
+                handleOnClick={this.handleCancel}
+              />
+            )
           )}
-        </Row>
+        </section>
       </Container>
     );
   }
