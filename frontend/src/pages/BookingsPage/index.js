@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import { Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { Prev } from "react-bootstrap/esm/PageItem";
 import BookingList from "../../components/Booking/BookingList";
 import Loading from "../../components/Loading";
 import AuthContext from "../../context/auth-context";
+import BookingChart from "./BookingChart";
 
 class BookingPage extends Component {
   state = {
     loading: false,
     bookings: [],
+    switchType: "list",
   };
 
   isActive = true;
@@ -75,6 +77,7 @@ class BookingPage extends Component {
           _id
           event{
             title
+            price
           }
           user{
             email
@@ -110,6 +113,15 @@ class BookingPage extends Component {
       });
   };
 
+  handleTypeSwitch = () => {
+    if (this.state.switchType === "list") {
+      this.setState({ switchType: "chart" });
+    }
+    if (this.state.switchType === "chart") {
+      this.setState({ switchType: "list" });
+    }
+  };
+
   render() {
     return (
       <Container className="mt-4">
@@ -117,12 +129,32 @@ class BookingPage extends Component {
           {this.state.loading ? (
             <Loading />
           ) : (
-            this.state.bookings.length !== 0 && (
-              <BookingList
-                bookings={this.state.bookings}
-                handleOnClick={this.handleCancel}
-              />
-            )
+            <>
+              <Row>
+                <Col className="d-flex p-4 shadow mb-4 justify-content-center">
+                  <Button
+                    onClick={() => this.handleTypeSwitch()}
+                    variant="warning"
+                  >
+                    {this.state.switchType === "list"
+                      ? "Switch to Chart"
+                      : this.state.switchType === "chart"
+                      ? "Switch to List"
+                      : "Error"}
+                  </Button>
+                </Col>
+              </Row>
+              {this.state.switchType === "list" &&
+                this.state.bookings.length !== 0 && (
+                  <BookingList
+                    bookings={this.state.bookings}
+                    handleOnClick={this.handleCancel}
+                  />
+                )}
+              {this.state.switchType === "chart" && (
+                <BookingChart bookings={this.state.bookings} />
+              )}
+            </>
           )}
         </section>
       </Container>
