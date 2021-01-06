@@ -3,12 +3,12 @@ const User = require("../../models/user");
 const { dateToString } = require("../../helpers/date");
 
 const transformEvent = (event) => {
-  return {
-    ...event._doc,
-    _id: event.id,
-    date: dateToString(event._doc.date),
-    creator: user.bind(this, event._doc.creator),
-  };
+    const a = {
+      ...event._doc,
+      date: dateToString(event._doc.date),
+      creator: () => user(event._doc.creator),
+    };
+    return a;
 };
 
 const transformBooking = (booking) => {
